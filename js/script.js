@@ -4,7 +4,10 @@ const seconds = document.querySelector(".seconds .number"),
   days = document.querySelector(".days .number");
 
 function getRemainingTime() {
-  const cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)countdown_time\s*=\s*([^;]*).*$)|^.*$/, "$1");
+  const cookieValue = document.cookie.replace(
+    /(?:(?:^|.*;\s*)countdown_time\s*=\s*([^;]*).*$)|^.*$/,
+    "$1"
+  );
 
   if (cookieValue) {
     return JSON.parse(cookieValue);
@@ -13,7 +16,7 @@ function getRemainingTime() {
       secValue: 11,
       minValue: 2,
       hourValue: 2,
-      dayValue: 100
+      dayValue: 100,
     };
   }
 }
@@ -23,10 +26,12 @@ function saveRemainingTime() {
     secValue,
     minValue,
     hourValue,
-    dayValue
+    dayValue,
   };
 
-  document.cookie = `countdown_time=${JSON.stringify(remainingTime)}; expires=${new Date(Date.now() + 604800000).toUTCString()}; path=/`;
+  document.cookie = `countdown_time=${JSON.stringify(
+    remainingTime
+  )}; expires=${new Date(Date.now() + 604800000).toUTCString()}; path=/`;
 }
 
 let { secValue, minValue, hourValue, dayValue } = getRemainingTime();
@@ -49,7 +54,8 @@ const timeFunction = setInterval(() => {
 
   if (dayValue === 0) {
     clearInterval(timeFunction);
-    document.cookie = "countdown_time=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "countdown_time=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
   seconds.textContent = secValue < 10 ? `0${secValue}` : secValue;
