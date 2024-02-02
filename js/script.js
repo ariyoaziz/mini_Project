@@ -3,10 +3,35 @@ const seconds = document.querySelector(".seconds .number"),
   hours = document.querySelector(".hours .number"),
   days = document.querySelector(".days .number");
 
-let secValue = 11,
-  minValue = 0,
-  hourValue = 24,
-  dayValue = 100;
+// Fungsi untuk mendapatkan sisa waktu dari penyimpanan lokal
+function getRemainingTime() {
+  const storedTime = localStorage.getItem("countdown_time");
+
+  if (storedTime) {
+    return JSON.parse(storedTime);
+  } else {
+    return {
+      secValue: 11,
+      minValue: 2,
+      hourValue: 2,
+      dayValue: 100
+    };
+  }
+}
+
+// Fungsi untuk menyimpan sisa waktu ke penyimpanan lokal
+function saveRemainingTime() {
+  const remainingTime = {
+    secValue,
+    minValue,
+    hourValue,
+    dayValue
+  };
+
+  localStorage.setItem("countdown_time", JSON.stringify(remainingTime));
+}
+
+let { secValue, minValue, hourValue, dayValue } = getRemainingTime();
 
 const timeFunction = setInterval(() => {
   secValue--;
@@ -26,9 +51,13 @@ const timeFunction = setInterval(() => {
 
   if (dayValue === 0) {
     clearInterval(timeFunction);
+    localStorage.removeItem("countdown_time");
   }
+
   seconds.textContent = secValue < 10 ? `0${secValue}` : secValue;
   minutes.textContent = minValue < 10 ? `0${minValue}` : minValue;
   hours.textContent = hourValue < 10 ? `0${hourValue}` : hourValue;
   days.textContent = dayValue < 10 ? `0${dayValue}` : dayValue;
+
+  saveRemainingTime();
 }, 1000); //1000ms = 1s
