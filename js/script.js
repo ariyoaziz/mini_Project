@@ -3,12 +3,11 @@ const seconds = document.querySelector(".seconds .number"),
   hours = document.querySelector(".hours .number"),
   days = document.querySelector(".days .number");
 
-// Fungsi untuk mendapatkan sisa waktu dari penyimpanan lokal
 function getRemainingTime() {
-  const storedTime = localStorage.getItem("countdown_time");
+  const cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)countdown_time\s*=\s*([^;]*).*$)|^.*$/, "$1");
 
-  if (storedTime) {
-    return JSON.parse(storedTime);
+  if (cookieValue) {
+    return JSON.parse(cookieValue);
   } else {
     return {
       secValue: 11,
@@ -19,7 +18,6 @@ function getRemainingTime() {
   }
 }
 
-// Fungsi untuk menyimpan sisa waktu ke penyimpanan lokal
 function saveRemainingTime() {
   const remainingTime = {
     secValue,
@@ -28,7 +26,7 @@ function saveRemainingTime() {
     dayValue
   };
 
-  localStorage.setItem("countdown_time", JSON.stringify(remainingTime));
+  document.cookie = `countdown_time=${JSON.stringify(remainingTime)}; expires=${new Date(Date.now() + 604800000).toUTCString()}; path=/`;
 }
 
 let { secValue, minValue, hourValue, dayValue } = getRemainingTime();
@@ -51,7 +49,7 @@ const timeFunction = setInterval(() => {
 
   if (dayValue === 0) {
     clearInterval(timeFunction);
-    localStorage.removeItem("countdown_time");
+    document.cookie = "countdown_time=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
   seconds.textContent = secValue < 10 ? `0${secValue}` : secValue;
